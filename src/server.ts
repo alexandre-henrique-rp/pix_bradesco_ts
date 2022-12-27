@@ -14,3 +14,5 @@ app.listen(process.env.PORT || 3059, async function () {
   console.log('🚀🚀🤖 servidor em execução 🤖🚀🚀')
   console.log(`🚀🚀🤖 ${process.env.SERVE_CONSULT} 🤖🚀🚀`)
 });
+
+//payment.redebrasilrp.com.br
