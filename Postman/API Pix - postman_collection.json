@@ -1,0 +1,1175 @@
+{
+	"info": {
+		"_postman_id": "6549148e-9480-4e44-8747-1ffecba174a4",
+		"name": "API Pix - Bradesco (Suporte.API)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cobrança vencimento",
+			"item": [
+				{
+					"name": "Criar (txid)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const uuid = require(\"uuid\");\r",
+									"\r",
+									"txId = uuid.v4().replace(/-/g, \"\")\r",
+									"\r",
+									"pm.globals.set(\"txid\", txId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"calendario\": {\r\n    \"dataDeVencimento\": \"2021-12-31\",\r\n    \"validadeAposVencimento\": 30\r\n  },\r\n  \"devedor\": {\r\n    \"logradouro\": \"Alameda Souza, Numero 80, Bairro Braz\",\r\n    \"cidade\": \"Recife\",\r\n    \"uf\": \"PE\",\r\n    \"cep\": \"70011750\",\r\n    \"cpf\": \"12345678909\",\r\n    \"nome\": \"Francisco da Silva\"\r\n  },\r\n  \"valor\": {\r\n    \"original\": \"120.45\",\r\n    \"multa\": {\r\n      \"modalidade\": \"2\",\r\n      \"valorPerc\": \"15.50\"\r\n    },\r\n    \"juros\": {\r\n      \"modalidade\": \"2\",\r\n      \"valorPerc\": \"2.50\"\r\n    },\r\n    \"desconto\": {\r\n      \"modalidade\": \"1\",\r\n      \"descontoDataFixa\": [\r\n        {\r\n          \"data\": \"2021-11-30\",\r\n          \"valorPerc\": \"30.00\"\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  \"chave\": \"{{chavePix}}\",\r\n  \"solicitacaoPagador\": \"Cobrança dos serviços prestados.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cobv/3b1d72babcb042c49ef17ba488f256b4",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cobv",
+								"3b1d72babcb042c49ef17ba488f256b4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revisar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"valor\": {\r\n        \"multa\": {\r\n            \"modalidade\": \"2\",\r\n            \"valorPerc\": \"10.00\"\r\n        },\r\n        \"juros\": {\r\n            \"modalidade\": \"2\",\r\n            \"valorPerc\": \"10.00\"\r\n        },\r\n        \"abatimento\": {\r\n            \"modalidade\": \"2\",\r\n            \"valorPerc\": \"10.00\"\r\n        }\r\n        \"desconto\": {\r\n            \"modalidade\": 2,\r\n            \"descontoDataFixa\": [\r\n                {\r\n                    \"data\": \"2022-05-22\",\r\n                    \"valorPerc\": \"0.01\"\r\n                }]\r\n            }\r\n        }\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cobv/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cobv",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cobv/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cobv",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date(); // Or the date you'd like converted.\r",
+									"var isoDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();\r",
+									"\r",
+									"\r",
+									"pm.request.addQueryParams({\r",
+									"    key: \"fim\",\r",
+									"    value: isoDateTime\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cobv?inicio=2021-06-20T18:00:00.000Z",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cobv"
+							],
+							"query": [
+								{
+									"key": "fim",
+									"value": "2020-08-13T20:00:00.000Z",
+									"disabled": true
+								},
+								{
+									"key": "inicio",
+									"value": "2021-06-20T18:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.request.addHeader({",
+							"    key: \"Authorization\",",
+							"    value: \"Bearer \" + pm.collectionVariables.get(\"pixAccessToken\")",
+							"})"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Cobrança imediata",
+			"item": [
+				{
+					"name": "Criar (txid)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const uuid = require(\"uuid\");\r",
+									"\r",
+									"txId = uuid.v4().replace(/-/g, \"\")\r",
+									"\r",
+									"pm.collectionVariables.set(\"txid\", txId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"calendario\": {\r\n    \"expiracao\": 3600\r\n  },\r\n  \"devedor\": {\r\n    \"cnpj\": \"12345678000195\",\r\n    \"nome\": \"Empresa de Serviços SA\"\r\n  },\r\n  \"valor\": {\r\n    \"original\": \"37.00\"\r\n  },\r\n  \"chave\": \"{{chavePix}}\",\r\n  \"solicitacaoPagador\": \"Serviço realizado.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cob/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cob",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revisar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"REMOVIDA_PELO_USUARIO_RECEBEDOR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cob/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cob",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cob/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cob",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date(); // Or the date you'd like converted.\r",
+									"var isoDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();\r",
+									"\r",
+									"pm.request.addQueryParams({\r",
+									"    key: \"fim\",\r",
+									"    value: isoDateTime\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cob?inicio=2021-06-23T18:00:00.000Z",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cob"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2021-06-23T18:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.request.addHeader({",
+							"    key: \"Authorization\",",
+							"    value: \"Bearer \" + pm.collectionVariables.get(\"pixAccessToken\")",
+							"})"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Pix recebidos",
+			"item": [
+				{
+					"name": "Consultar e2e",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/pix/{{e2e}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"pix",
+								"{{e2e}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date(); // Or the date you'd like converted.\r",
+									"var isoDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();\r",
+									"\r",
+									"pm.request.addQueryParams({\r",
+									"    key: \"fim\",\r",
+									"    value: isoDateTime\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/pix?inicio=2021-06-23T18:00:00.000Z",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"pix"
+							],
+							"query": [
+								{
+									"key": "txidPresente",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "txid",
+									"value": "8ecd1a4f9a8b4222807a76e05e5e3a63",
+									"disabled": true
+								},
+								{
+									"key": "inicio",
+									"value": "2021-06-23T18:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta devolução",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/pix/{{e2e}}/devolucao/{{devolucaoId}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"pix",
+								"{{e2e}}",
+								"devolucao",
+								"{{devolucaoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar devolução",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const uuid = require(\"uuid\");\r",
+									"\r",
+									"devolucaoId = uuid.v4().replace(/-/g, \"\")\r",
+									"\r",
+									"pm.globals.set(\"devolucaoId\", devolucaoId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"valor\": \"0.01\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/pix/{{e2e}}/devolucao/{{devolucaoId}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"pix",
+								"{{e2e}}",
+								"devolucao",
+								"{{devolucaoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.request.addHeader({",
+							"    key: \"Authorization\",",
+							"    value: \"Bearer \" + pm.collectionVariables.get(\"pixAccessToken\")",
+							"})"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Reutilização location",
+			"item": [
+				{
+					"name": "Criar (loc)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set loc\", () => {\r",
+									"    pm.collectionVariables.set(\"loc\", pm.response.json().id);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Set location URL\", () => {\r",
+									"    pm.collectionVariables.set(\"locationURL\", \"https://\" + pm.response.json().location);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tipoCob\": \"cob\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/loc",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"loc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar cobrança",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const uuid = require(\"uuid\");\r",
+									"\r",
+									"txId = uuid.v4().replace(/-/g, \"\")\r",
+									"\r",
+									"pm.collectionVariables.set(\"txid\", txId);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"calendario\": {\r\n    \"expiracao\": 3600\r\n  },\r\n  \"loc\": {{loc}},\r\n  \"devedor\": {\r\n    \"cnpj\": \"12345678000195\",\r\n    \"nome\": \"Empresa de Serviços SA\"\r\n  },\r\n  \"valor\": {\r\n    \"original\": \"30.00\"\r\n  },\r\n  \"chave\": \"{{chavePix}}\",\r\n  \"solicitacaoPagador\": \"Serviço realizado.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/cob/{{txid}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"cob",
+								"{{txid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recuperar URL payload",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{locationURL}}",
+							"host": [
+								"{{locationURL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Desvincular",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/loc/{{loc}}/txid",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"loc",
+								"{{loc}}",
+								"txid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/loc/{{loc}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"loc",
+								"{{loc}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar lista",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date(); // Or the date you'd like converted.\r",
+									"var isoDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();\r",
+									"\r",
+									"pm.request.addQueryParams({\r",
+									"    key: \"fim\",\r",
+									"    value: isoDateTime\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/loc?inicio=2021-06-23T18:00:00.000Z",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"loc"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2021-06-23T18:00:00.000Z"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.request.addHeader({",
+							"    key: \"Authorization\",",
+							"    value: \"Bearer \" + pm.collectionVariables.get(\"pixAccessToken\")",
+							"})"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Webhook",
+			"item": [
+				{
+					"name": "Consultar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/webhook/{{chavePix}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"webhook",
+								"{{chavePix}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"webhookUrl\": \"https://ambiente.com.br:443/endpoint/webhook/bradesco/pix\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/webhook/{{chavePix}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"webhook",
+								"{{chavePix}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apagar",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{ambiente}}.bradesco.com.br/{{versao}}/webhook/{{chavePix}}",
+							"protocol": "https",
+							"host": [
+								"{{ambiente}}",
+								"bradesco",
+								"com",
+								"br"
+							],
+							"path": [
+								"{{versao}}",
+								"webhook",
+								"{{chavePix}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.request.addHeader({",
+							"    key: \"Authorization\",",
+							"    value: \"Bearer \" + pm.collectionVariables.get(\"pixAccessToken\")",
+							"})"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Token de acesso",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"clientID = \"\"\r",
+							"clientSecret = \"\"\r",
+							"\r",
+							"pm.request.headers.upsert({\r",
+							"    key: \"Authorization\",\r",
+							"    value: \"Basic \" + btoa(clientID + \":\" + clientSecret)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Set access-token\", () => {\r",
+							"    pm.collectionVariables.set(\"pixAccessToken\", pm.response.json().access_token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "cob.write cob.read pix.write pix.read webhook.write webhook.read",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{ambiente}}.bradesco.com.br/oauth/token",
+					"protocol": "https",
+					"host": [
+						"{{ambiente}}",
+						"bradesco",
+						"com",
+						"br"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "chavePix",
+			"value": ""
+		},
+		{
+			"key": "pixAccessToken",
+			"value": ""
+		},
+		{
+			"key": "txid",
+			"value": ""
+		},
+		{
+			"key": "e2e",
+			"value": ""
+		},
+		{
+			"key": "devolucaoId",
+			"value": ""
+		},
+		{
+			"key": "loc",
+			"value": ""
+		},
+		{
+			"key": "locationURL",
+			"value": ""
+		},
+		{
+			"key": "versao",
+			"value": "v2"
+		},
+		{
+			"key": "ambiente",
+			"value": "qrpix-h"
+		},
+		{
+			"key": "cpfCnpj",
+			"value": ""
+		},
+		{
+			"key": "parceiroNome",
+			"value": "Suporte Pix"
+		},
+		{
+			"key": "statelessOpen",
+			"value": ""
+		},
+		{
+			"key": "statelessClosed",
+			"value": ""
+		}
+	]
+}
