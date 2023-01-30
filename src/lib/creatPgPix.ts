@@ -4,6 +4,7 @@ export const CreatPgPix = async (token: any, data: any) => {
   const url = ' / cob/' + data.id;
 
  console.log(token);
+//  console.log(data);
   return{
     "status": "ATIVA",
     "calendario": {

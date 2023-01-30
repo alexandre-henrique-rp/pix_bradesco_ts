@@ -31,9 +31,11 @@
   },
   "dependencies": {
     "axios": "^1.2.1",
+    "axios-https-proxy-fix": "^0.17.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "pem": "^1.14.6",
     "sequelize": "^6.25.8"
   }
 }
