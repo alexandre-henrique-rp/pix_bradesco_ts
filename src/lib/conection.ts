@@ -8,19 +8,28 @@ import { CreatPgPix } from './creatPgPix';
 export const Conection = async (info: any) => {
   const url = process.env.PAYMENT_URL_TEST + '/oauth/token';
 
+  const currentDate = new Date();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const seconds = currentDate.getSeconds();
+  const dia = currentDate.getDate();
+  const mes = currentDate.getMonth() + 1;
+  const ano = currentDate.getFullYear();
+  const totalSeconds = hours * 3600 + minutes * 60 + seconds + dia + mes + ano;
+  console.log(totalSeconds);
+
   function generateEncryptedPassword(base: number): string {
-    const encoder = new TextEncoder();
-    let encryptedPassword = encoder.encode(base.toString());
+    let encryptedPassword = base.toString();
     while (encryptedPassword.length < 30) {
-      encryptedPassword = encoder.encode(encryptedPassword.toString());
+      encryptedPassword = (base + encryptedPassword).toString();
     }
-    encryptedPassword = encryptedPassword.slice(0, 18);
-    return Array.from(encryptedPassword).map(b => b.toString(50)).join('');
+    encryptedPassword = encryptedPassword.slice(0, 38);
+    return encryptedPassword;
   }
 
-  const txid = generateEncryptedPassword(info.cpf)
-  console.log(txid)
-  console.log(txid.length)
+  const txid = generateEncryptedPassword(info.cpf + totalSeconds);
+  console.log(txid);
+  console.log(txid.length);
 
   // const url2 = process.env.PAYMENT_URL_TEST + '/ cob/'+ txid;
   const string = process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET;
@@ -63,8 +72,8 @@ export const Conection = async (info: any) => {
     .post(url, data)
     .then(async (response) => {
       const resp = await response.data.access_token;
-      console.log(info)
-      console.log(resp)
+      console.log(info);
+      console.log(resp);
       // await axiosInstance
       //   .post(url2, data)
       //   .then(async (response) => {
@@ -82,4 +91,3 @@ export const Conection = async (info: any) => {
       return error;
     });
 };
-
