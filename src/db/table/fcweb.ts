@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
-import DataBese from '../db';
-
+import  DataBese from '../db';
 
 
 export const Fcweb: any = DataBese.define(
@@ -13,7 +12,6 @@ export const Fcweb: any = DataBese.define(
       autoIncrement: true,
       allowNull: false,
     },
-
     s_alerta: DataTypes.TEXT,
     referencia: DataTypes.TEXT,
     id_boleto: DataTypes.TEXT,
@@ -73,11 +71,16 @@ export const Fcweb: any = DataBese.define(
     custocd: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
     smspg: DataTypes.INTEGER,
+    txid : DataTypes.TEXT,
+    qrcodeLink : DataTypes.TEXT,
+    CreatePixDate: DataTypes.DATE ,
+    ConclusionPixDate: DataTypes.DATE,
+    telPix:DataTypes.TEXT,
+    emailPix:DataTypes.TEXT,
   },
   { freezeTableName: true },
 ); // função para conectar tebela ja criada
 
 //criar ou sicronizar a tabela
 // Cliente.sync();
-
 
